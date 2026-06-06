@@ -130,9 +130,14 @@ export default function HostDashboard() {
                   <div className="p-4">
                     <h3 className="font-bold text-gray-900 mb-1">{chalet.name}</h3>
                     <p className="text-sm text-gray-500 mb-3">{chalet.city}</p>
-                    <Link href={`/host/chalets/${chalet.id}`}>
-                      <Button variant="outline" size="sm" className="w-full">إدارة الشاليه</Button>
-                    </Link>
+                    <div className="flex gap-2">
+                      <Link href={`/host/chalets/${chalet.id}`} className="flex-1">
+                        <Button variant="outline" size="sm" className="w-full">إدارة</Button>
+                      </Link>
+                      <Link href={`/host/chalets/${chalet.id}/edit`} className="flex-1">
+                        <Button size="sm" className="w-full">✏️ تعديل</Button>
+                      </Link>
+                    </div>
                   </div>
                 </div>
               ))}

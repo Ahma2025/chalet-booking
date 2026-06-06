@@ -1,6 +1,6 @@
 "use client";
 import { useSearchParams, useRouter } from "next/navigation";
-import { useState } from "react";
+import { useState, use } from "react";
 import { useSession } from "next-auth/react";
 import { format } from "date-fns";
 import { arSA } from "date-fns/locale";
@@ -10,7 +10,8 @@ import { Label } from "@/components/ui/label";
 import { formatPrice, getPeriodLabel } from "@/lib/utils";
 import { Calendar, Clock, DollarSign, User, Phone, MapPin, CheckCircle } from "lucide-react";
 
-export default function BookPage({ params }: { params: { id: string } }) {
+export default function BookPage({ params }: { params: Promise<{ id: string }> }) {
+  const { id } = use(params);
   const { data: session } = useSession();
   const searchParams = useSearchParams();
   const router = useRouter();
@@ -41,7 +42,7 @@ export default function BookPage({ params }: { params: { id: string } }) {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
-        chaletId: params.id,
+        chaletId: id,
         date,
         period,
         totalPrice: parseFloat(price),

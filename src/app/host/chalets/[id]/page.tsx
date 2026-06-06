@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useEffect, useState, use } from "react";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { format, startOfDay, addMonths } from "date-fns";
@@ -17,7 +17,8 @@ const PERIODS = [
   { id: "FULL_DAY", label: "يوم كامل" },
 ];
 
-export default function ManageChaletPage({ params }: { params: { id: string } }) {
+export default function ManageChaletPage({ params }: { params: Promise<{ id: string }> }) {
+  const { id } = use(params);
   const { data: session, status } = useSession();
   const router = useRouter();
   const [chalet, setChalet] = useState<any>(null);
@@ -31,28 +32,28 @@ export default function ManageChaletPage({ params }: { params: { id: string } })
   }, [status, router]);
 
   useEffect(() => {
-    fetch(`/api/chalets/${params.id}`).then((r) => r.json()).then((data) => {
+    fetch(`/api/chalets/${id}`).then((r) => r.json()).then((data) => {
       setChalet(data);
       setLoading(false);
     });
-  }, [params.id]);
+  }, [id]);
 
   const handleBlock = async (period: string) => {
     if (!selectedDay) return;
     setBlocking(true);
-    await fetch(`/api/chalets/${params.id}/block`, {
+    await fetch(`/api/chalets/${id}/block`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ date: selectedDay.toISOString(), period }),
     });
-    const res = await fetch(`/api/chalets/${params.id}`);
+    const res = await fetch(`/api/chalets/${id}`);
     const data = await res.json();
     setChalet(data);
     setBlocking(false);
   };
 
   const handleUnblock = async (slotId: string) => {
-    await fetch(`/api/chalets/${params.id}/block`, {
+    await fetch(`/api/chalets/${id}/block`, {
       method: "DELETE",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ slotId }),
@@ -114,9 +115,14 @@ export default function ManageChaletPage({ params }: { params: { id: string } })
           <h1 className="text-2xl font-bold text-gray-900">{chalet.name}</h1>
           <p className="text-gray-500 text-sm mt-1">{chalet.city} — إدارة الشاليه</p>
         </div>
-        <Button variant="outline" onClick={() => router.push(`/chalets/${params.id}`)}>
-          عرض الصفحة
-        </Button>
+        <div className="flex gap-2">
+          <Button variant="outline" onClick={() => router.push(`/host/chalets/${id}/edit`)}>
+            ✏️ تعديل الشاليه
+          </Button>
+          <Button variant="ghost" onClick={() => router.push(`/chalets/${id}`)}>
+            عرض الصفحة
+          </Button>
+        </div>
       </div>
 
       <div className="flex gap-1 bg-gray-100 rounded-xl p-1 mb-6 w-fit">
