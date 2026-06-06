@@ -74,7 +74,7 @@ export async function GET(req: Request) {
 
   if (role === "HOST") {
     const chalets = await prisma.chalet.findMany({ where: { hostId: userId }, select: { id: true } });
-    const chaletIds = chalets.map((c) => c.id);
+    const chaletIds = chalets.map((c: { id: string }) => c.id);
 
     const bookings = await prisma.booking.findMany({
       where: { chaletId: { in: chaletIds } },
