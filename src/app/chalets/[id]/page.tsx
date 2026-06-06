@@ -27,7 +27,7 @@ export default async function ChaletDetailPage({ params }: { params: Promise<{ i
 
   if (!chalet) notFound();
 
-  const allImages = [chalet.coverImage, ...chalet.images.map((i) => i.url)].filter(Boolean) as string[];
+  const allImages = [chalet.coverImage, ...chalet.images.map((i: { url: string }) => i.url)].filter(Boolean) as string[];
 
   return (
     <div className="max-w-7xl mx-auto px-4 py-8">
