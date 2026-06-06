@@ -5,7 +5,7 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Building2, Shield, Clock } from "lucide-react";
 
-export const revalidate = 60;
+export const dynamic = "force-dynamic";
 
 export default async function HomePage() {
   const chalets = await prisma.chalet.findMany({

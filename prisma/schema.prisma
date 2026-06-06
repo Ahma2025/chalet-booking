@@ -3,7 +3,7 @@ generator client {
 }
 
 datasource db {
-  provider = "sqlite"
+  provider = "postgresql"
 }
 
 model Account {
@@ -83,21 +83,21 @@ model ChaletImage {
 }
 
 model Amenity {
-  id       String @id @default(cuid())
+  id       String  @id @default(cuid())
   name     String
   icon     String?
   chaletId String
-  chalet   Chalet @relation(fields: [chaletId], references: [id], onDelete: Cascade)
+  chalet   Chalet  @relation(fields: [chaletId], references: [id], onDelete: Cascade)
 }
 
 model DayPricing {
-  id            String  @id @default(cuid())
-  dayOfWeek     Int
-  morningPrice  Float?
-  eveningPrice  Float?
-  fullDayPrice  Float?
-  chaletId      String
-  chalet        Chalet  @relation(fields: [chaletId], references: [id], onDelete: Cascade)
+  id           String  @id @default(cuid())
+  dayOfWeek    Int
+  morningPrice Float?
+  eveningPrice Float?
+  fullDayPrice Float?
+  chaletId     String
+  chalet       Chalet  @relation(fields: [chaletId], references: [id], onDelete: Cascade)
 }
 
 model SpecialPrice {
